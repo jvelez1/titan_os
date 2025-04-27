@@ -10,9 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_27_125149) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_27_140813) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "content_availabilities", force: :cascade do |t|
+    t.string "url"
+    t.bigint "content_id", null: false
+    t.bigint "streaming_app_id", null: false
+    t.bigint "country_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["content_id"], name: "index_content_availabilities_on_content_id"
+    t.index ["country_id"], name: "index_content_availabilities_on_country_id"
+    t.index ["streaming_app_id"], name: "index_content_availabilities_on_streaming_app_id"
+  end
+
+  create_table "content_schedules", force: :cascade do |t|
+    t.bigint "content_id", null: false
+    t.datetime "start_time", null: false
+    t.datetime "end_time", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["content_id"], name: "index_content_schedules_on_content_id"
+  end
 
   create_table "contents", force: :cascade do |t|
     t.string "type", null: false
@@ -45,5 +66,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_27_125149) do
     t.index ["name"], name: "index_streaming_apps_on_name", unique: true
   end
 
+  add_foreign_key "content_availabilities", "contents"
+  add_foreign_key "content_availabilities", "countries"
+  add_foreign_key "content_availabilities", "streaming_apps"
+  add_foreign_key "content_schedules", "contents"
   add_foreign_key "contents", "contents", column: "parent_content_id"
 end
