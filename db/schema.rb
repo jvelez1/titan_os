@@ -10,9 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_27_123823) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_27_125149) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "contents", force: :cascade do |t|
+    t.string "type", null: false
+    t.string "title"
+    t.integer "year"
+    t.integer "duration_in_seconds"
+    t.integer "number"
+    t.bigint "parent_content_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_content_id"], name: "index_contents_on_parent_content_id"
+    t.index ["title"], name: "index_contents_on_title"
+    t.index ["year"], name: "index_contents_on_year"
+  end
 
   create_table "countries", force: :cascade do |t|
     t.string "name", null: false
@@ -30,4 +44,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_27_123823) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_streaming_apps_on_name", unique: true
   end
+
+  add_foreign_key "contents", "contents", column: "parent_content_id"
 end
