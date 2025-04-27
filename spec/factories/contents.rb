@@ -26,4 +26,13 @@ FactoryBot.define do
     number { 1 }
     association :parent_content, factory: :season
   end
+
+  factory :channel, class: 'Channel' do
+    type { 'Channel' }
+  end
+
+  factory :channel_program, class: 'ChannelProgram' do
+    type { 'ChannelProgram' }
+    association :parent_content, factory: :channel
+  end
 end
