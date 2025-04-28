@@ -47,6 +47,7 @@ group :development, :test do
 
   gem "factory_bot_rails", "~> 6.2"
   gem "solargraph"
+  gem "awesome_print", "~> 1.8"
 end
 
 group :test do
