@@ -30,14 +30,14 @@ RSpec.describe Contents::ListContent, type: :service do
     end
 
     context 'when filtering by content type' do
-      it 'returns only movies when content_type is movie' do
-        params[:content_type] = 'Movie'
+      it 'returns only movies when type is movie' do
+        params[:type] = 'Movie'
         result = subject
         expect(result).to contain_exactly(movie_gb)
       end
 
-      it 'returns only TV shows when content_type is tv_show' do
-        params[:content_type] = 'TvShow'
+      it 'returns only TV shows when type is tv_show' do
+        params[:type] = 'TvShow'
         result = subject
         expect(result).to contain_exactly(tv_show_gb)
       end
