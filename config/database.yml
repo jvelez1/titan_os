@@ -18,10 +18,15 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV["TITAN_OS_DATABASE_USERNAME"] || "postgres" %>
-  password: <%= ENV["TITAN_OS_DATABASE_PASSWORD"] || "postgres" %>
-  host: <%= ENV["TITAN_OS_DB_HOST"] || "localhost" %>
-  port: <%= ENV["TITAN_OS_DB_PORT"] || "5432" %>
+  <% if ENV["DATABASE_URL"] %>
+  url: <%= ENV["DATABASE_URL"] %>
+  <% else %>
+  host: <%= ENV.fetch("TITAN_OS_DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("TITAN_OS_DB_PORT", 5432) %>
+  username: <%= ENV.fetch("TITAN_OS_DB_USER", "postgres") %>
+  password: <%= ENV.fetch("TITAN_OS_DB_PASSWORD", "postgres") %>
+  database: <%= ENV.fetch("TITAN_OS_DB_NAME", "my_app_development") %>
+  <% end %>
 
 development:
   <<: *default
