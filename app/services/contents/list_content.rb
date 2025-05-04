@@ -25,7 +25,7 @@ module Contents
     def filter_by_content_type(scope, type)
       return scope unless type
 
-      scope.where(type: type)
+      scope.where(type: type.camelize)
     end
 
     def filter_by_query(scope, query)
