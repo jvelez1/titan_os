@@ -1,12 +1,13 @@
 module Contents
   class GetContent
-    def initialize(params)
-      @params = params
+    def initialize(id)
+      @id = id
     end
 
     def call
-      content = Content.find_by!(id: params[:id])
+      content = Content.find_by!(id: id)
 
+      # Avoid N+1 when rendering.
       case content
       in TvShow
         seasons = content.seasons.includes(:episodes)
@@ -22,6 +23,7 @@ module Contents
     end
 
     private
-    attr_reader :params
+
+    attr_reader :id
   end
 end

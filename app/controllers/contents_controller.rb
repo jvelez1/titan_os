@@ -4,6 +4,11 @@ class ContentsController < ApplicationController
     render :index, formats: :json, locals: { contents: contents }
   end
 
+  def show
+    content =  Contents::GetContent.new(params[:id]).call
+    render :show, formats: :json, locals: { content: content }
+  end
+
 
   private
 

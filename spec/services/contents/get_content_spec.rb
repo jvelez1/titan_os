@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Contents::GetContent, type: :service do
   describe '#call' do
-    let(:params) { { id: content.id } }
+    let(:id) { content.id }
 
-    subject { described_class.new(params).call }
+    subject { described_class.new(id).call }
 
     context 'when the content is a TvShow' do
       let(:content) { create(:tv_show, title: "The last of us") }
@@ -51,7 +51,7 @@ RSpec.describe Contents::GetContent, type: :service do
     end
 
     context 'when the content does not exist' do
-      let(:params) { { id: 9999 } }
+      let(:id) { 9999 }
 
       it 'raises an ActiveRecord::RecordNotFound error' do
         expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
