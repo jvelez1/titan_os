@@ -12,6 +12,16 @@ class FavoritesController < ApplicationController
       locals: { favorite_channel_programs: favorite_channel_programs }
   end
 
+  def apps
+    favorite_apps = @user.user_apps
+      .includes(:streaming_app)
+      .order(position: :desc)
+
+    render :apps,
+      formats: :json,
+      locals: { favorite_apps: favorite_apps }
+  end
+
   private
 
   def set_user

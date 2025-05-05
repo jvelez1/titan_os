@@ -1,20 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe "Favorites", type: :request do
+  setup do
+    @user = create(:user, email: 'user@example.com')
+    @another_user = create(:user, email: 'another@example.com')
+  end
+
   describe 'GET /users/:user_id/favorites/channel_programs' do
-    let(:user) { create(:user, email: 'user@example.com') }
     let(:channel_program1) { create(:channel_program, title: "Morning News") }
     let(:channel_program2) { create(:channel_program, title: "Evening Show") }
     let!(:user_channel_program1) do
-      create(:user_channel_program, user: user, channel_program: channel_program1, time_watched_in_seconds: 2.days.ago.to_i)
+      create(:user_channel_program, user: @user, channel_program: channel_program1, time_watched_in_seconds: 2.days.ago.to_i)
     end
     let!(:user_channel_program2) do
-      create(:user_channel_program, user: user, channel_program: channel_program2, time_watched_in_seconds: 1.day.ago.to_i)
+      create(:user_channel_program, user: @user, channel_program: channel_program2, time_watched_in_seconds: 1.day.ago.to_i)
     end
 
     context 'when the user exists' do
       it 'returns a list of favorite channel programs ordered by time_watched descending' do
-        get favorites_channel_programs_path(user)
+        get favorites_channel_programs_path(@user)
 
         expect(response).to have_http_status(:ok)
         expect(parsed_response.size).to eq(2)
@@ -27,8 +31,7 @@ RSpec.describe "Favorites", type: :request do
       end
 
       it 'returns an empty list if the user has no favorite channel programs' do
-        another_user = create(:user, email: 'another@example.com')
-        get favorites_channel_programs_path(another_user)
+        get favorites_channel_programs_path(@another_user)
 
         expect(response).to have_http_status(:ok)
         expect(parsed_response).to eq([])
@@ -44,4 +47,42 @@ RSpec.describe "Favorites", type: :request do
       end
     end
   end
+
+  describe 'GET /users/:user_id/favorites/apps' do
+      let(:streaming_app1) { create(:streaming_app, name: "Netflix") }
+      let(:streaming_app2) { create(:streaming_app, name: "Hulu") }
+      let!(:user_app1) { create(:user_app, user: @user, streaming_app: streaming_app1, position: 2) }
+      let!(:user_app2) { create(:user_app, user: @user, streaming_app: streaming_app2, position: 1) }
+
+      context 'when the user exists' do
+        it 'returns a list of favorite apps ordered by position descending' do
+          get favorites_apps_path(@user)
+
+          expect(response).to have_http_status(:ok)
+          expect(parsed_response.size).to eq(2)
+
+          expect(parsed_response[0]['id']).to eq(user_app1.id)
+          expect(parsed_response[1]['id']).to eq(user_app2.id)
+
+          expect(parsed_response[0]['streaming_app']['name']).to eq("Netflix")
+          expect(parsed_response[1]['streaming_app']['name']).to eq("Hulu")
+        end
+
+        it 'returns an empty list if the user has no favorite apps' do
+          get favorites_apps_path(@another_user)
+
+          expect(response).to have_http_status(:ok)
+          expect(parsed_response).to eq([])
+        end
+      end
+
+      context 'when the user does not exist' do
+        it 'returns a 404 error' do
+          get "/users/0/favorites/apps", as: :json
+
+          expect(response).to have_http_status(:not_found)
+          expect(parsed_response).to eq({ 'error' => "Record not found" })
+        end
+      end
+    end
 end
