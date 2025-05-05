@@ -530,3 +530,26 @@ data[:channels].each do |channel_data|
     end
   end
 end
+
+user = User.create!(
+  name: "John Doe",
+  email: "john.doe@example.com"
+)
+
+streaming_apps = StreamingApp.where(name: [ "netflix", "prime_video" ])
+streaming_apps.each_with_index do |app, index|
+  UserApp.create!(
+    user: user,
+    streaming_app: app,
+    position: index + 1
+  )
+end
+
+channel_programs = ChannelProgram.where(title: [ "SpongeBob", "News 24hr" ])
+channel_programs.each do |program|
+  UserChannelProgram.create!(
+    user: user,
+    channel_program: program,
+    time_watched_in_seconds: 3600
+  )
+end

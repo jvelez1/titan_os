@@ -61,11 +61,11 @@ RSpec.describe "Favorites", type: :request do
         expect(response).to have_http_status(:ok)
         expect(parsed_response.size).to eq(2)
 
-        expect(parsed_response[0]['id']).to eq(user_app1.id)
-        expect(parsed_response[1]['id']).to eq(user_app2.id)
+        expect(parsed_response[0]['id']).to eq(user_app2.id)
+        expect(parsed_response[1]['id']).to eq(user_app1.id)
 
-        expect(parsed_response[0]['streaming_app']['name']).to eq("Netflix")
-        expect(parsed_response[1]['streaming_app']['name']).to eq("Hulu")
+        expect(parsed_response[0]['streaming_app']['name']).to eq("Hulu")
+        expect(parsed_response[1]['streaming_app']['name']).to eq("Netflix")
       end
 
       it 'returns an empty list if the user has no favorite apps' do

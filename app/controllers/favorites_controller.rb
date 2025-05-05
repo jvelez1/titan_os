@@ -15,7 +15,7 @@ class FavoritesController < ApplicationController
   def apps
     favorite_apps = @user.user_apps
       .includes(:streaming_app)
-      .order(position: :desc)
+      .order(position: :asc)
 
     render :apps,
       formats: :json,
