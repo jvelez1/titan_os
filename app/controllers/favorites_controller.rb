@@ -22,9 +22,18 @@ class FavoritesController < ApplicationController
       locals: { favorite_apps: favorite_apps }
   end
 
+  def favorite_app
+    Favorites::SetFavoriteApp.new(@user, favorite_app_params).call
+    render json: { message: "Favorite app set successfully" }, status: :ok
+  end
+
   private
 
   def set_user
     @user = User.find(params[:user_id])
+  end
+
+  def favorite_app_params
+    params.permit(:streaming_app_id, :position)
   end
 end

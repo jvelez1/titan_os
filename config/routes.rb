@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   scope "users/:user_id" do
     get "favorites/channel_programs", to: "favorites#channel_programs"
     get "favorites/apps", to: "favorites#apps"
+    post "favorite_app", to: "favorites#favorite_app"
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
